@@ -17,7 +17,7 @@ class TodoListTest extends TestCase
     {
         parent::setUp();
 
-        $this->list = TodoList::factory()->create();
+        $this->list = $this->createTodoList();
     }
 
     /**
@@ -32,7 +32,7 @@ class TodoListTest extends TestCase
 
 
        //Perform
-        $response = $this->getJson(route('todo-list.index'));
+        $response = $this->getJson(route('todo-lists.index'));
 
 
        //Predict
@@ -45,7 +45,7 @@ class TodoListTest extends TestCase
         //Prepare
         // $list = TodoList::factory()->create();
         //Perform
-        $response = $this->getJson(route('todo-list.show', $this->list->id))
+        $response = $this->getJson(route('todo-lists.show', $this->list->id))
             ->assertOk()
             ->json();
 
@@ -60,7 +60,7 @@ class TodoListTest extends TestCase
         $list = TodoList::factory()->make();
 
         //Action
-        $response = $this->postJson(route('todo-list.store'), ['name'=> $list->name])
+        $response = $this->postJson(route('todo-lists.store'), ['name'=> $list->name])
             ->assertCreated()
             ->json()
             ;
@@ -76,11 +76,45 @@ class TodoListTest extends TestCase
         //Preparation
         $this->withExceptionHandling();
         //Action
-        $response = $this->postJson(route('todo-list.store'))
+        $response = $this->postJson(route('todo-lists.store'))
             ->assertUnprocessable()
             ->assertJsonValidationErrors('name')
             ;
         //Assertion
+    }
 
+    public function test_delete_todo_list()
+    {
+        //Preparation
+
+        //Action
+        $this->deleteJson(route('todo-lists.destroy', $this->list->id))
+            ->assertNoContent();
+
+        //Assertion
+        $this->assertDatabaseMissing('todo_lists', ['name'=> $this->list->name]);
+    }
+
+    public function test_update_todo_list()
+    {
+        $this->patchJson(route('todo-lists.update', $this->list->id), ['name'=>'Updated List'])
+            ->assertOk();
+
+        $this->assertDatabaseMissing('todo_lists', ['name'=>   $this->list->name]);
+        $this->assertDatabaseHas('todo_lists', ['name'=>'Updated List']);
+    }
+
+
+
+    public function test_while_upate_todo_list_name_field_is_required()
+    {
+        //Preparation
+        $this->withExceptionHandling();
+        //Action
+        $this->patchJson(route('todo-lists.update', $this->list->id))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrorFor('name')
+            ;
+        //Assertion
     }
 }
