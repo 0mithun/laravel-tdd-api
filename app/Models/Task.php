@@ -11,5 +11,12 @@ class Task extends Model
 
     protected $fillable = [
         'title',
+        'todo_list_id'
     ];
+
+
+    public function list()
+    {
+        return $this->belongsTo(TodoList::class, 'todo_list_id', 'id');
+    }
 }
