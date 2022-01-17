@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TodoListFactory extends Factory
@@ -14,7 +15,8 @@ class TodoListFactory extends Factory
     public function definition()
     {
         return [
-            'name'      =>  $this->faker->sentence(1)
+            'name'      =>  $this->faker->sentence(1),
+            'user_id'   =>  User::factory()->create()->id
         ];
     }
 }
