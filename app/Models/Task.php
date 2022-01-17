@@ -18,7 +18,8 @@ class Task extends Model
         'title',
         'todo_list_id',
         'status',
-        'description'
+        'description',
+        'label_id'
     ];
 
 

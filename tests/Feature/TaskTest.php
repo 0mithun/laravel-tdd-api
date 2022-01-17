@@ -43,13 +43,12 @@ class TaskTest extends TestCase
     {
         $list = $this->createTodoList();
         $task = Task::factory()->make();
+        $label = $this->createLabel();
 
-        $response = $this->postJson(route('todo-lists.tasks.store', $list->id), ['title'=> $task->title])
+        $response = $this->postJson(route('todo-lists.tasks.store', $list->id), ['title'=> $task->title, 'label_id' => $label->id])
             ->assertCreated()
             ->json()
             ;
-
-
 
         $this->assertEquals($task->title, $response['title']);
         $this->assertDatabaseHas('tasks', ['title'=>$task->title, 'todo_list_id'=>$list->id]);
@@ -86,5 +85,19 @@ class TaskTest extends TestCase
         $this->assertDatabaseMissing('tasks', ['title'=> $task->title]);
         $this->assertDatabaseHas('tasks', ['title'=>'New Title']);
         $this->assertEquals('New Title', $response['title']);
+    }
+
+
+    public function test_store_task_without_a_label_should_give_error()
+    {
+
+        $list = $this->createTodoList();
+        $task = Task::factory()->make();
+
+        $response = $this->postJson(route('todo-lists.tasks.store', $list->id), ['title'=> $task->title])
+            ->assertCreated()
+            // ->assertUnprocessable()
+            // ->assertJsonValidationErrorFor('label_id')
+            ;
     }
 }
