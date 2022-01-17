@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\Label;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\TodoList;
@@ -33,6 +34,11 @@ abstract class TestCase extends BaseTestCase
 
     public function createUser(array $args = []){
         return User::factory()->create($args);
+    }
+
+    public function createLabel(array $args = [])
+    {
+        return Label::factory()->create($args);
     }
 
     public function authUser()

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LabelFactory extends Factory
@@ -14,7 +15,9 @@ class LabelFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name'      =>  $this->faker->firstName(),
+            'color'     =>  $this->faker->colorName(),
+            'user_id'   =>  User::factory()->create()->id
         ];
     }
 }

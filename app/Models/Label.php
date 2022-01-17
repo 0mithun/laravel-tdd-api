@@ -10,6 +10,6 @@ class Label extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'color',
+        'name', 'color','user_id'
     ];
 }
